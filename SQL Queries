@@ -1,0 +1,123 @@
+/*This table shows student names, their number grade in the class (out of 100), and assignments completed in decimal form (calculated by dividing how many assignments they completed by how many assignments there have been)*/
+CREATE TABLE student_grades (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id INTEGER,
+    last_name TEXT,
+    first_name TEXT,
+    number_grade INTEGER,
+    assignments_completed_decimal REAL);
+
+/*20 sample student names, their number grades, and the decimal form of how many assignments they completed are added to the student_grades table*/
+INSERT INTO student_grades (student_id, last_name, first_name, number_grade, assignments_completed_decimal)
+    VALUES (568539, "Boyer", "Charlie", 98, 1.0);
+ 
+INSERT INTO student_grades (student_id, last_name, first_name, number_grade, assignments_completed_decimal)
+    VALUES (794151, "Dougherty", "Rubin", 59, 0.676);
+    
+INSERT INTO student_grades (student_id, last_name, first_name, number_grade, assignments_completed_decimal)
+    VALUES (965014, "Rivera", "Verna", 77, 0.832);
+    
+INSERT INTO student_grades (student_id, last_name, first_name, number_grade, assignments_completed_decimal)
+    VALUES (765106, "Mathews", "Beverly", 79, 0.895 );
+    
+INSERT INTO student_grades (student_id, last_name, first_name, number_grade, assignments_completed_decimal)
+    VALUES (256565, "Bowen", "Myles", 73, 0.874);
+    
+INSERT INTO student_grades (student_id, last_name, first_name, number_grade, assignments_completed_decimal)
+    VALUES (443387, "Wood", "Boyd", 61, 0.706);
+
+INSERT INTO student_grades (student_id, last_name, first_name, number_grade, assignments_completed_decimal)
+    VALUES (358949, "Cabrera", "Lesa", 68, 0.779);
+
+INSERT INTO student_grades (student_id, last_name, first_name, number_grade, assignments_completed_decimal)
+    VALUES (650653, "Levy", "Nathanael", 58, 0.602);
+    
+INSERT INTO student_grades (student_id, last_name, first_name, number_grade, assignments_completed_decimal)
+    VALUES (109490, "Alvarez", "Katharine", 91, 1.0 );
+    
+INSERT INTO student_grades (student_id, last_name, first_name, number_grade, assignments_completed_decimal)
+    VALUES (931207, "Buchanan", "Roberta", 85, 1.0);
+    
+INSERT INTO student_grades (student_id, last_name, first_name, number_grade, assignments_completed_decimal)
+    VALUES (593637, "Cruz", "Marilyn", 84, 0.908);
+
+INSERT INTO student_grades (student_id, last_name, first_name, number_grade, assignments_completed_decimal)
+    VALUES (575032, "Hoffman", "Jose", 88, 1.0);
+
+INSERT INTO student_grades (student_id, last_name, first_name, number_grade, assignments_completed_decimal)
+    VALUES (533424, "Phillips", "Garret", 99, 1.0);
+    
+INSERT INTO student_grades (student_id, last_name, first_name, number_grade, assignments_completed_decimal)
+    VALUES (231840, "Prince", "Maricela", 88, 0.916);
+
+INSERT INTO student_grades (student_id, last_name, first_name, number_grade, assignments_completed_decimal)
+    VALUES (740461, "Sparks", "Bradley", 67, 0.602);
+
+INSERT INTO student_grades (student_id, last_name, first_name, number_grade, assignments_completed_decimal)
+    VALUES (152120, "Hill", "Sharon", 66, 0.679);
+    
+INSERT INTO student_grades (student_id, last_name, first_name, number_grade, assignments_completed_decimal)
+    VALUES (184948, "Griffith", "Ricardo", 91, 1.0);
+
+INSERT INTO student_grades (student_id, last_name, first_name, number_grade, assignments_completed_decimal)
+    VALUES (757807, "Gray", "Jules", 82, 1.0);
+    
+INSERT INTO student_grades (student_id, last_name, first_name, number_grade, assignments_completed_decimal)
+    VALUES (867723, "Lewis", "Christy", 80, 0.902);
+
+INSERT INTO student_grades (student_id, last_name, first_name, number_grade, assignments_completed_decimal)
+    VALUES (895652, "McKinney", "Jonathan", 86, 0.946);
+
+/*A new column is added to the table, the percent of assignments completed*/
+ALTER TABLE student_grades ADD percent_assignments_completed INTEGER;
+
+/*All of the values in the new column, percent_assignments_completed, are updated by multiplying the assignments_completed_decimal column by 100 and rounding it*/
+UPDATE student_grades SET percent_assignments_completed = ROUND(assignments_completed_decimal*100);
+
+/*This shows the average percent of assignments completed by the students in the class*/
+SELECT AVG(percent_assignments_completed) AS average_percent_assignments_completed FROM student_grades;
+
+/*Another new column is added to the table: the students' letter grades. If the student has no grade (such as at the beginning of a term when there are no assignments in the gradebook, the default for this columns is "N/A"*/
+ALTER TABLE student_grades ADD letter_grade TEXT default "N/A";
+
+/*All of the values in the new column, letter_grade, are updated with a letter grade being assigned depending on the students' number grades. Thus, the letter grades will update as necessary when the students' number grades change*/
+UPDATE student_grades SET letter_grade =
+    CASE 
+      WHEN number_grade >= 97 THEN "A+"
+      WHEN number_grade >= 93 THEN "A"
+      WHEN number_grade >= 90 THEN "A-"
+      WHEN number_grade >= 87 THEN "B+"
+      WHEN number_grade >= 83 THEN "B"
+      WHEN number_grade >= 80 THEN "B-"
+      WHEN number_grade >= 77 THEN "C+"
+      WHEN number_grade >= 73 THEN "C"
+      WHEN number_grade >= 70 THEN "C-"
+      WHEN number_grade >= 67 THEN "D+"
+      WHEN number_grade >= 63 THEN "D"
+      WHEN number_grade >= 60 THEN "D-"
+      ELSE "F"
+    END;
+
+/*This shows the various letter grades that students in the class have earned and how many students have earned each of those letter grades*/      
+SELECT letter_grade, COUNT(letter_grade) AS "Number of Students" 
+    FROM student_grades
+    GROUP BY letter_grade;
+    
+/*Hypothetically, a gradebook program could display the type of information listed above. After a while, developers might decide to add a comment section so teachers can write comments to their students. Here, a teacher_comments column, with a default comment, is added to the student_grades table*/
+ALTER TABLE student_grades ADD teacher_comment TEXT default "No teacher comments at the moment.";
+
+/*A teacher could also write their own default comments based on their students' grades (a comment for students with grades in the "A" range, another for those with grades in the "B" range, etc.)*/    
+UPDATE student_grades SET teacher_comment =
+    CASE 
+      WHEN letter_grade LIKE "A%" THEN "Keep up the outstanding work! If you have any questions about your assignments and/or grades, please reach out to me."
+      WHEN letter_grade LIKE "B%" THEN "Keep up the great work! If you have any questions about your assignments and/or grades, please reach out to me."
+      WHEN letter_grade LIKE "C%" THEN "It seems like you might be struggling with some of the content in this class. I want to help you succeed, so please reach out with any questions you have."
+      ELSE "I am concerned about your progress in this class. I want to help you succeed, so please schedule a time to meet with me so that we can create a plan to help you be successful in this class." 
+    END;
+    
+/*If a teacher wants to add personal comments to students, they can do so as well*/
+UPDATE student_grades SET teacher_comment = "I have seen fantastic improvement in your learning this term. Keep up the hard work!" WHERE student_id = 757807;
+
+/*This shows all of the updated data in the table*/
+SELECT * FROM student_grades
+ORDER BY last_name;
