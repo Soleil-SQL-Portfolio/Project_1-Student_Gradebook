@@ -1,1 +1,1 @@
-This project is a sample of a student gradebook, using randomly generated names and grades. SQL queries are used to alter the table by adding columns such as the percent of assignments completed, letter grade, and teacher comment. Queries also assign specific letter grades to students based on their number grade and specific teacher comments based on their letter grade. There is also an option for teachers to customize comments for specific students. Please see the corresponding Tableau visualization for this project at: XXX.   
+
