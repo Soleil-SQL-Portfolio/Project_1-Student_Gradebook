@@ -115,7 +115,7 @@ UPDATE student_grades SET teacher_comment =
       ELSE "I am concerned about your progress in this class. I want to help you succeed, so please schedule a time to meet with me so that we can create a plan to help you be successful in this class." 
     END;
     
-/*If a teacher wants to add personal comments to students, they can do so as well*/
+/*If a teacher wants to add customized comments to students, they can do so as well*/
 UPDATE student_grades SET teacher_comment = "I have seen fantastic improvement in your learning this term. Keep up the hard work!" WHERE student_id = 757807;
 
 /*This shows all of the updated data in the table*/
